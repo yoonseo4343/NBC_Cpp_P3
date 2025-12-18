@@ -107,12 +107,17 @@ public:
         cout << "*Inventory Overwrite!" << endl;
     }
     void Resize(int newCapacity) {
-        T* temp = new T[newCapacity];
-        copy(pItems_, pItems_ + size_, temp);
-        delete[] pItems_;
-        pItems_ = temp;
-        capacity_ = newCapacity;
-        cout << "Resize: "<<GetCapacity() << endl;
+        if (newCapacity > size_) { //아이템 소멸 방지
+            T* temp = new T[newCapacity];
+            copy(pItems_, pItems_ + size_, temp);
+            delete[] pItems_;
+            pItems_ = temp;
+            capacity_ = newCapacity;
+            cout << "Resize: " << GetCapacity() << endl;
+        }
+        else {
+            cout << "*It cannot be set to less than the number of items." << endl;
+        }
     }
     void SortItems() {
         cout << "*Sort by Price..." << endl;
@@ -126,7 +131,7 @@ int main() {
     Item banana = Item("banana", 100);
     Item apple = Item("apple", 150);
 
-    Inventory<Item> box=Inventory<Item>(-3);
+    Inventory<Item> box=Inventory<Item>(10);
     cout << "Inventory Size: " << box.GetCapacity() << endl;
     box.printAllItems();
     box.AddItem(cap);
@@ -142,10 +147,19 @@ int main() {
 
     Inventory<Item> box2 = Inventory<Item>(box); // 복사
     box2.printAllItems();
-    box2.Resize(10); // 사이즈 조절
+    box2.Resize(10); //사이즈 조절
     
     Inventory<Item> box3 = Inventory<Item>(5);
     box3.Assign(box2); // 덮기
     box3.printAllItems();
+
+    /*box.printAllItems();
+    box.AddItem(cap);
+    box.AddItem(shoes);
+    box.AddItem(banana);
+    box.printAllItems();
+    box.Resize(5);
+    box.Resize(2);
+    box.printAllItems();*/
     return 0;
 }
